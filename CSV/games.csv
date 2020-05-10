@@ -1,0 +1,41 @@
+﻿Pool,Team_A,Team_B
+A,Ireland,Scotland
+A,Ireland,Japan
+A,Ireland,Russia
+A,Ireland,Samoa
+A,Scotland,Japan
+A,Scotland,Russia
+A,Scotland,Samoa
+A,Japan,Russia
+A,Japan,Samoa
+A,Russia,Samoa
+B,New Zealand,South Africa
+B,New Zealand,Italy
+B,New Zealand,Namibia
+B,New Zealand,Canada
+B,South Africa,Italy
+B,South Africa,Namibia
+B,South Africa,Canada
+B,Italy,Namibia
+B,Italy,Canada
+B,Namibia,Canada
+C,England,France
+C,England,Argentina
+C,England,USA
+C,England,Tonga
+C,France,Argentina
+C,France,USA
+C,France,Tonga
+C,Argentina,USA
+C,Argentina,Tonga
+C,USA,Tonga
+D,Australia,Wales
+D,Australia,Georgia
+D,Australia,Fiji
+D,Australia,Uruguay
+D,Wales,Georgia
+D,Wales,Fiji
+D,Wales,Uruguay
+D,Georgia,Fiji
+D,Georgia,Uruguay
+D,Fiji,Uruguay
