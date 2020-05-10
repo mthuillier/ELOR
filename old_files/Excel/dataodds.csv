@@ -1,0 +1,297 @@
+Home Team,Away Team,Avg. Margin
+USA,Wales,-30.5
+Tonga,Wales,-11
+South Africa,Wales,19.28571429
+Scotland,Wales,0.288135593
+Samoa,Wales,-0.5
+New Zealand,Wales,30.64285714
+Namibia,Wales,-25.5
+Japan,Wales,-22.6
+Italy,Wales,-15.5
+Ireland,Wales,1.615384615
+France,Wales,2.604166667
+Fiji,Wales,-21
+England,Wales,5.328358209
+Canada,Wales,-24.85714286
+Australia,Wales,14.33333333
+Argentina,Wales,-4.625
+Wales,USA,32.33333333
+Uruguay,USA,-17.85714286
+Tonga,USA,16.85714286
+South Africa,USA,56.5
+Scotland,USA,31.33333333
+Samoa,USA,4.75
+Russia,USA,-15.8
+New Zealand,USA,40
+Japan,USA,0.307692308
+Italy,USA,18.66666667
+Ireland,USA,32
+Georgia,USA,0.333333333
+France,USA,7.333333333
+Fiji,USA,11.4
+England,USA,43
+Canada,USA,7.5
+Australia,USA,47.4
+Argentina,USA,19.16666667
+Wales,Uruguay,45
+USA,Uruguay,14.6
+South Africa,Uruguay,77.66666667
+Scotland,Uruguay,31
+Samoa,Uruguay,47
+Russia,Uruguay,3
+Namibia,Uruguay,-10.5
+Japan,Uruguay,31
+Italy,Uruguay,32
+Georgia,Uruguay,5.75
+Fiji,Uruguay,36
+England,Uruguay,77.5
+Canada,Uruguay,16.125
+Australia,Uruguay,62
+Argentina,Uruguay,55.3826087
+Wales,Tonga,34.5
+USA,Tonga,5.5
+South Africa,Tonga,34.5
+Scotland,Tonga,19.5
+Samoa,Tonga,2.074074074
+New Zealand,Tonga,58.2
+Namibia,Tonga,-10
+Japan,Tonga,-1.647058824
+Italy,Tonga,14.4
+Ireland,Tonga,23
+Georgia,Tonga,1.5
+France,Tonga,19.5
+Fiji,Tonga,9.346153846
+England,Tonga,53.5
+Canada,Tonga,6.571428571
+Australia,Tonga,31.25
+Argentina,Tonga,29
+Wales,South Africa,-3.681818182
+USA,South Africa,-27
+Scotland,South Africa,-14.45
+Samoa,South Africa,-37.5
+New Zealand,South Africa,9.346938776
+Namibia,South Africa,-87
+Japan,South Africa,2
+Italy,South Africa,-20.42857143
+Ireland,South Africa,-0.823529412
+Georgia,South Africa,-27
+France,South Africa,-4.65
+Fiji,South Africa,-31.5
+England,South Africa,-0.846153846
+Australia,South Africa,4.886363636
+Argentina,South Africa,-11.29411765
+Wales,Scotland,-0.775510204
+USA,Scotland,-19.66666667
+South Africa,Scotland,16.71428571
+Samoa,Scotland,-7.25
+New Zealand,Scotland,22
+Japan,Scotland,-18.5
+Italy,Scotland,-1.933333333
+Ireland,Scotland,2.383333333
+Georgia,Scotland,-9
+France,Scotland,5.428571429
+Fiji,Scotland,4
+England,Scotland,6.508196721
+Canada,Scotland,-12.33333333
+Australia,Scotland,14.84615385
+Argentina,Scotland,-3.9
+Wales,Samoa,8.833333333
+USA,Samoa,-6
+Tonga,Samoa,-2.2
+South Africa,Samoa,36.4
+Scotland,Samoa,9.5
+New Zealand,Samoa,55
+Namibia,Samoa,-32
+Japan,Samoa,-9.818181818
+Italy,Samoa,-6.4
+Ireland,Samoa,16
+Georgia,Samoa,-6
+France,Samoa,30
+Fiji,Samoa,6.909090909
+England,Samoa,21.77777778
+Canada,Samoa,-8
+Australia,Samoa,29.2
+Argentina,Samoa,-7.25
+USA,Russia,30.33333333
+Uruguay,Russia,6
+Namibia,Russia,1
+Japan,Russia,25.33333333
+Italy,Russia,36
+Ireland,Russia,50
+Georgia,Russia,15.71428571
+Canada,Russia,13.2
+Australia,Russia,46
+Wales,New Zealand,-13.95238095
+USA,New Zealand,-58
+South Africa,New Zealand,-1.307692308
+Scotland,New Zealand,-15.13043478
+Samoa,New Zealand,-9
+Namibia,New Zealand,-44
+Japan,New Zealand,-71.33333333
+Italy,New Zealand,-50
+Ireland,New Zealand,-11.35
+Georgia,New Zealand,-33
+France,New Zealand,-10.90909091
+England,New Zealand,-5.925925926
+Canada,New Zealand,-39
+Australia,New Zealand,-11.73770492
+Argentina,New Zealand,-16.76923077
+Uruguay,Namibia,11
+South Africa,Namibia,92
+Russia,Namibia,27
+Ireland,Namibia,36
+Georgia,Namibia,7.8
+France,Namibia,55.5
+Fiji,Namibia,36.5
+Canada,Namibia,32.5
+Australia,Namibia,142
+Argentina,Namibia,52.66666667
+Wales,Japan,50.8
+USA,Japan,12.09090909
+Uruguay,Japan,6
+Scotland,Japan,51.66666667
+Samoa,Japan,25.25
+New Zealand,Japan,76
+Italy,Japan,17.66666667
+Ireland,Japan,35.66666667
+Georgia,Japan,-0.25
+France,Japan,15
+Fiji,Japan,9
+England,Japan,36.5
+Canada,Japan,6
+Australia,Japan,40.5
+Argentina,Japan,20.25
+Wales,Italy,19.92857143
+USA,Italy,-12
+Uruguay,Italy,-17.5
+South Africa,Italy,48.28571429
+Scotland,Italy,13.71428571
+Samoa,Italy,17
+Russia,Italy,-33.66666667
+New Zealand,Italy,46.33333333
+Namibia,Italy,-0.333333333
+Japan,Italy,-8.4
+Ireland,Italy,23.38888889
+France,Italy,18.73913044
+Fiji,Italy,11.5
+England,Italy,28.85714286
+Canada,Italy,-7.166666667
+Australia,Italy,21.125
+Argentina,Italy,8.333333333
+Wales,Ireland,3.578947368
+USA,Ireland,-28.6
+Tonga,Ireland,-21
+South Africa,Ireland,11.2
+Scotland,Ireland,3.132450331
+Samoa,Ireland,-26
+Russia,Ireland,-32
+New Zealand,Ireland,22.41666667
+Namibia,Ireland,10
+Japan,Ireland,-27.75
+Italy,Ireland,-14.18181818
+Georgia,Ireland,-4
+France,Ireland,8.215686275
+England,Ireland,6.573770492
+Canada,Ireland,-23
+Australia,Ireland,6
+Argentina,Ireland,5.777777778
+Wales,Georgia,7
+USA,Georgia,10
+Uruguay,Georgia,10
+Tonga,Georgia,31
+Scotland,Georgia,27
+Samoa,Georgia,0
+Russia,Georgia,-10.375
+Japan,Georgia,26.5
+Italy,Georgia,10
+Ireland,Georgia,53.66666667
+France,Georgia,57
+Fiji,Georgia,5.5
+England,Georgia,54.5
+Canada,Georgia,9.75
+Argentina,Georgia,24
+Wales,France,3.666666667
+USA,France,-16.5
+Tonga,France,4
+South Africa,France,6.433333333
+Scotland,France,2.155555556
+Samoa,France,-17
+New Zealand,France,14.09677419
+Italy,France,-18.22222222
+Ireland,France,0.428571429
+Fiji,France,-27.66666667
+England,France,6.425925926
+Canada,France,-20.5
+Australia,France,9
+Argentina,France,-10.18181818
+Wales,Fiji,12.5
+USA,Fiji,11
+Tonga,Fiji,-2.488372093
+South Africa,Fiji,25
+Scotland,Fiji,21.25
+Samoa,Fiji,-3.837837838
+New Zealand,Fiji,62.8
+Japan,Fiji,-9.285714286
+Italy,Fiji,12
+Ireland,Fiji,30.25
+Georgia,Fiji,-5
+France,Fiji,22.57142857
+England,Fiji,33
+Canada,Fiji,-17.5
+Australia,Fiji,18.61111111
+Argentina,Fiji,8.5
+Wales,England,3.09375
+USA,England,-29
+South Africa,England,9.25
+Scotland,England,-0.803030303
+New Zealand,England,16.26666667
+Italy,England,-25.5
+Ireland,England,-0.467741935
+France,England,0.296296296
+Fiji,England,-14.5
+Canada,England,-25.5
+Australia,England,11
+Argentina,England,-7.0625
+Wales,Canada,15.8
+USA,Canada,-2.818181818
+Uruguay,Canada,-3
+Tonga,Canada,8
+South Africa,Canada,26.5
+Scotland,Canada,28.5
+Samoa,Canada,19
+New Zealand,Canada,60.33333333
+Japan,Canada,2.039215686
+Italy,Canada,25
+Ireland,Canada,36
+Georgia,Canada,14.33333333
+France,Canada,22.8
+Fiji,Canada,-12
+England,Canada,37.25
+Australia,Canada,39.2
+Argentina,Canada,20
+Wales,Australia,-4.642857143
+USA,Australia,-17.66666667
+South Africa,Australia,7.936170213
+Scotland,Australia,-6.857142857
+New Zealand,Australia,9.480519481
+Japan,Australia,-33
+Italy,Australia,-19.81818182
+Ireland,Australia,-3.9
+France,Australia,1.692307692
+Fiji,Australia,-9.333333333
+England,Australia,2.275862069
+Canada,Australia,-27
+Argentina,Australia,-7.526315789
+Wales,Argentina,7.6
+USA,Argentina,-6.5
+Uruguay,Argentina,-29.53846154
+South Africa,Argentina,19.41666667
+Scotland,Argentina,4.875
+New Zealand,Argentina,33.73333333
+Japan,Argentina,-9.5
+Italy,Argentina,-7.4
+Ireland,Argentina,10.77777778
+France,Argentina,6.111111111
+England,Argentina,15.44444444
+Canada,Argentina,-8.333333333
+Australia,Argentina,15.26666667
