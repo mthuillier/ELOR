@@ -1,0 +1,73 @@
+---
+title: "ELO"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(zoo)
+```
+
+```{r}
+ELO=read.csv("/Users/marcusthuillier/Desktop/Rugby/D3/match_results_1995_to_2018_ELO_all.csv", header=T)
+head(ELO)
+```
+
+```{r}
+home = ELO %>%
+  select(Date, Home_Team, Home_Rating_Updated)
+
+away = ELO %>%
+  select(Date, Away_Team, Away_Rating_Updated)
+
+names(home) <- c("Date", "Team", "ELO")
+names(away) <- c("Date", "Team", "ELO")
+
+rank = rbind(home,away)
+```
+
+```{r}
+rank$Date <- as.Date(rank$Date, format = "%d %B %Y")
+```
+
+
+```{r}
+total = rank %>%
+  complete(Date = seq.Date(as.Date("1890-02-01"),as.Date("2019-03-23"),by="days"),Team) %>%
+  group_by(Team) %>%
+  fill('ELO')
+
+total = na.omit(total)
+head(total)
+
+```
+
+
+```{r}
+test = total %>%
+  group_by(Date) %>%
+  mutate(rank = rank(-ELO, ties.method = "min"))
+
+head(test)
+```
+
+```{r}
+write.csv(test,file = "ELO.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
