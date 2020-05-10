@@ -1,0 +1,13 @@
+﻿Round,Team 1,Win % 1,Win % 2,Team 2,Predicted margin,Actual margin
+1,Australia,20.8%,79.2%,New Zealand,-11,-25
+1,South Africa,86.9%,13.1%,Argentina,16,13
+2,New Zealand,94.4%,5.6%,Australia,23,28
+2,Argentina,36.6%,63.4%,South Africa,-5,13
+3,New Zealand,98.2%,1.8%,Argentina,33,22
+3,Australia,69.6%,30.4%,South Africa,7,5
+4,New Zealand,95.1%,4.9%,South Africa,25,-2
+4,Australia,84.6%,15.4%,Argentina,14,-4
+5,South Africa,69.3%,30.7%,Australia,7,11
+5,Argentina,9.5%,90.5%,New Zealand,-19,-18
+6,South Africa,21.9%,78.1%,New Zealand,-10,-2
+6,Argentina,47.5%,52.5%,Australia,-1,-11

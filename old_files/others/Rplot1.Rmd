@@ -1,0 +1,114 @@
+---
+title: "Untitled"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+data_frame(
+  x = seq(-50, 75, 0.5),
+  y = dnorm(seq(-50, 75, 0.5), mean = 2.75, sd = 25)
+) %>%
+  mutate(winner = ifelse(x <= 0, "England", "Australia")) %>%
+  ggplot() +
+  geom_ribbon(aes(x = x, ymin = 0, ymax = y, fill = winner)) +
+  labs(x = "away team's margin of victory")
+
+```
+
+
+```{r}
+pnorm(0, mean = 25, sd = 21, lower.tail = TRUE)
+```
+0.118
+
+
+
+```{r}
+sol <- 2946.41024 - 2516.379535	
+6.971846 + 0.043178*sol
+```
+
+
+
+```{r}
+game=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/Games/InGameNZSA.csv", header=T)
+game
+```
+
+```{r}
+library(tidyr)
+
+minute <- 0:80
+second <- 0:59
+full_game <- crossing(minute, second) %>%
+  arrange(desc(minute), desc(second)) %>%
+  mutate(minutes_remain = minute + (second / 60), minutes_played = 80 - minutes_remain,
+    home = 0, away = 0) %>%
+  filter(minutes_remain <= 80)
+
+full_game
+
+for (i in seq_len(nrow(game))) {
+  cur_time <- round(game$minutes_remain[i], digits = 2)
+  cur_row <- which(round(full_game$minutes_remain, digits = 2) == cur_time)
+  full_game$home[cur_row:nrow(full_game)] <- game$Home_Score[i]
+  full_game$away[cur_row:nrow(full_game)] <- game$Away_Score[i]
+}
+
+```
+
+```{r}
+full_game <- full_game %>%
+  mutate(
+    away_margin = away - home,
+    mean = (25 * (minutes_remain / 80)) + (away_margin * (minutes_played / 80)),
+    sd = 21 / sqrt(80 / minutes_remain),
+    home_winprob = pnorm(0, mean = mean, sd = sd, lower.tail = TRUE),
+    away_winprob = 1 - home_winprob
+  )
+full_game
+
+```
+
+```{r}
+#https://www.colorhexa.com/512888
+full_game %>%
+  gather(team, winprob, home_winprob:away_winprob) %>%
+  ggplot(aes(x = minutes_played, y = winprob, color = team)) +
+  geom_line(size = 1) +
+  scale_color_manual(values = c("#000000", "#2ba601"),
+    labels = c("New Zealand", "South Africa")) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1),
+    labels = paste0(seq(0, 100, by = 10), "%")) +
+  scale_x_continuous(limits = c(0, 80), breaks = seq(0, 80, 4),
+    labels = paste0(seq(80, 0, -4))) +
+  labs(title = "New Zealand 32 – 30 South Africa, 6 Oct 2018", y = "Win Probability", x = "Minutes Remaining") +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.title = element_blank())
+
+full_game[which.max(full_game$home_winprob),]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

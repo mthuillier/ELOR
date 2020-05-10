@@ -1,0 +1,215 @@
+---
+title: "Morestats"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data=read.csv("/Users/marcusthuillier/Desktop/Rugby/match_results_1995_to_2018_ELO_all.csv", header=T)
+
+real <- data.frame(data$Home_Away_Draw)
+roundUp <- function(x,to=5)
+{
+  to*(x%/%to + as.logical(x%%to))
+}
+real$margin <- roundUp(data$Home_Rating - data$Away_Rating)
+
+library(dplyr)
+plotty = real %>% group_by(margin) %>% summarise(mean(data.Home_Away_Draw))
+head(plotty)
+plotty = plotty[plotty$`mean(data.Home_Away_Draw)` != 0, ]
+plotty = plotty[plotty$`mean(data.Home_Away_Draw)` != 1, ]
+#plotty = plotty[plotty$margin > -300, ]
+#plotty = plotty[plotty$margin < 300, ]
+
+```
+
+```{r}
+perc=read.csv("/Users/marcusthuillier/Desktop/Rugby/percentages.csv", header=T)
+head(perc)
+
+
+```
+
+
+```{r}
+plot(perc[,2],perc[,3],xlim=c(-1000,1000),ylim=c(0,1),col="red")
+points(plotty,col="blue")
+#lines(plotty,col="black")
+```
+
+```{r}
+
+plotty <- plotty[-c(1,2,199,228,229),]
+fit <- lm(`mean(data.Home_Away_Draw)` ~ margin, data = plotty)
+summary(fit)
+plot(fit)
+
+
+```
+
+
+```{r}
+plot(perc[,2],perc[,3],xlim=c(-2000,2000),ylim=c(0,1),col="red")
+abline(fit)
+
+```
+
+
+```{r}
+options(stringsAsFactors = FALSE)
+odds=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/dataodds.csv", header=T)
+head(odds)
+ELO=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/ELOR.csv", header=F)
+head(ELO)
+```
+
+
+```{r}
+
+library(dplyr)
+odds = merge(odds,ELO, by.x = "Home.Team", by.y = "V1")
+odds = merge(odds,ELO, by.x = "Away.Team", by.y = "V1")
+odds$diff <- odds$V2.x-odds$V2.y
+head(odds)
+
+
+```
+
+```{r}
+
+odds <- odds[-c(150, 228),]
+fit1 <- lm(Avg..Margin ~ diff, data = odds)
+summary(fit1)
+plot(fit1)
+plot(odds$diff,odds$Avg..Margin,xlim=c(-1000,1000),ylim=c(-50,60),col="red")
+abline(fit1)
+
+```
+
+```{r}
+new <- data.frame(diff = seq(-750, 750, 25))
+new$odds <- predict(fit1, new)
+new
+```
+
+
+```{r}
+rating=read.csv("/Users/marcusthuillier/Desktop/Rugby/ratingplot.csv", header=T)
+head(rating)
+```
+
+
+
+```{r}
+library(stringr)
+rating$year <- str_sub(rating$Date,-4,-1)
+```
+
+
+
+
+```{r}
+library(dplyr)
+plotting = rating %>% group_by(.dots=c("year","Team")) %>% summarise(mean(ELOR))
+names(plotting) <- c("year", "team", "ELOR")
+head(plotting)
+
+```
+
+
+```{r}
+
+ls<-list()
+for (i in unique(plotting$year)) {
+  temp <- plotting[plotting$year == i,]
+  temp <- temp[order(temp$ELOR, decreasing = TRUE),] 
+  ls[[i]] <-temp
+
+}
+
+```
+
+
+
+
+```{r}
+france <- rating[rating$Team == "France",]
+plot(france$year,france$ELOR)
+
+```
+
+
+
+```{r}
+library(erer)
+write.list(ls, file = "MyData.csv")
+```
+
+```{r}
+library(dplyr)
+rating=read.csv("/Users/marcusthuillier/Desktop/Rugby/ratingplot.csv", header=T)
+
+head(rating)
+rating$year <- str_sub(rating$Date,-4,-1)
+rating$Date <- format(as.Date(rating$Date, "%d %B %Y"))
+rating <- rating[rating$Team != "Lions",]
+
+```
+
+```{r}
+readin <- function()
+{ 
+  n <- readline(prompt="Enter a date: ")
+  return(n)
+}
+
+```
+
+
+```{r}
+
+library(pander)
+
+#select date
+x = readin()
+y <- as.character(as.numeric(str_sub(x,-4,-1)) - 5)
+tableau <- rating[rating$year >= y,]
+tableau <- tableau[tableau$Date < as.Date(x, "%d %B %Y"),]
+#order by date
+tableau <- tableau[order(tableau$Date, decreasing = TRUE),]
+#delete early duplicates
+tableau <- tableau[!duplicated(tableau$Team),]
+#no NA
+tableau <- tableau[complete.cases(tableau), ]
+#rank
+tableau$Rank <-  rank(tableau$ELOR)
+#order by rank
+tableau <- tableau[order(tableau$Rank, decreasing = TRUE),]
+#clean
+tableau <- tableau[,c(3,4)]
+
+pander(tableau, type = 'grid', caption = paste("ELOR Rating by", x, sep=" "))
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

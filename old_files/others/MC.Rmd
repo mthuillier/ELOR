@@ -1,0 +1,1247 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCup.csv", header=T)
+Aprob <- as.matrix(data[c(1,2,3,4,5),c(5,7,8,9,10,11)])
+Bprob <- as.matrix(data[c(8,9,10,11,12),c(5,7,8,9,10,11)])
+Cprob <- as.matrix(data[c(15,16,17,18,19),c(5,7,8,9,10,11)])
+Dprob <- as.matrix(data[c(22,23,24,25,26),c(5,7,8,9,10,11)])
+```
+
+```{r}
+
+#INITIALIZE GROUPA 10000
+
+returns = rnorm(1:1000, mean = 0, sd = 1)
+
+X = matrix(ncol = 10,nrow = 10000)
+for (match in 1:10) {
+  for (i in 1:10000) {
+    X[i,match] = sample(returns,1)
+  }
+}
+
+I = matrix(ncol = 10,nrow = 1)
+I[1,1] = as.numeric(Aprob[1,3]) #Ire-Sco
+I[1,2] = as.numeric(Aprob[1,4]) #Ire-Jap
+I[1,3] = as.numeric(Aprob[1,5]) #Ire-Rus
+I[1,4] = as.numeric(Aprob[1,6]) #Ire-Sam
+I[1,5] = as.numeric(Aprob[2,4]) #Sco-Jap
+I[1,6] = as.numeric(Aprob[2,5]) #Sco-Rus 
+I[1,7] = as.numeric(Aprob[2,6]) #Sco-Sam
+I[1,8] = as.numeric(Aprob[3,5]) #Jap-Rus
+I[1,9] = as.numeric(Aprob[3,6]) #Jap-Sam
+I[1,10] = as.numeric(Aprob[4,6]) #Rus-Sam
+
+R = matrix(ncol = 10,nrow = 10000)
+
+colnames(R) <- c("Ire-Sco","Ire-Jap","Ire-Rus","Ire-Sam","Sco-Jap","Sco-Rus","Sco-Sam","Jap-Rus","Jap-Sam","Rus-Sam")
+for (index in 1:10) {
+  for (i in 1:10000) {
+    if (X[i,index] < qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][1]
+    }
+    else if (X[i,index] > qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][2]
+    }
+    else if (X[i,index] == qnorm(I[1,index])) {
+      R[i,index] = "Draw"
+    }
+  }
+}
+
+```
+
+```{r}
+
+# GROUP A VICTORIES
+library(stringr)
+groupA <- matrix(ncol = 5,nrow = 10000)
+colnames(groupA) <- c("Ire","Sco","Jap","Sam","Rus")
+for (i in 1:10000) {
+  groupA[i,1] = sum(str_count(R[i,], "Ire"))
+  groupA[i,2] = sum(str_count(R[i,], "Sco"))
+  groupA[i,3] = sum(str_count(R[i,], "Jap"))
+  groupA[i,4] = sum(str_count(R[i,], "Sam"))
+  groupA[i,5] = sum(str_count(R[i,], "Rus"))
+}
+
+```
+
+```{r}
+# AVG VICTORIES
+
+mean(groupA[,1])
+mean(groupA[,2])
+mean(groupA[,3])
+mean(groupA[,4])
+mean(groupA[,5])
+
+```
+
+```{r}
+
+rankA <- matrix(ncol = 5,nrow = 10000)
+
+for (i in 1:10000) {
+  rankA[i,1] = rank(groupA[i,], ties.method= "random")[1]
+  rankA[i,2] = rank(groupA[i,], ties.method= "random")[2]
+  rankA[i,3] = rank(groupA[i,], ties.method= "random")[3]
+  rankA[i,4] = rank(groupA[i,], ties.method= "random")[4]
+  rankA[i,5] = rank(groupA[i,], ties.method= "random")[5]
+}
+
+#Ireland
+a1 <- c(sum(rankA[,1] == 5)/10000,sum(rankA[,1] == 4)/10000,sum(rankA[,1] == 3)/10000,sum(rankA[,1] == 2)/10000,sum(rankA[,1] == 1)/10000)
+#Scotland
+a2 <- c(sum(rankA[,2] == 5)/10000,sum(rankA[,2] == 4)/10000,sum(rankA[,2] == 3)/10000,sum(rankA[,2] == 2)/10000,sum(rankA[,2] == 1)/10000)
+#Japan
+a3 <- c(sum(rankA[,3] == 5)/10000,sum(rankA[,3] == 4)/10000,sum(rankA[,3] == 3)/10000,sum(rankA[,3] == 2)/10000,sum(rankA[,3] == 1)/10000)
+#Russia
+a4 <- c(sum(rankA[,4] == 5)/10000,sum(rankA[,4] == 4)/10000,sum(rankA[,4] == 3)/10000,sum(rankA[,4] == 2)/10000,sum(rankA[,4] == 1)/10000)
+#Samoa
+a5 <- c(sum(rankA[,5] == 5)/10000,sum(rankA[,5] == 4)/10000,sum(rankA[,5] == 3)/10000,sum(rankA[,5] == 2)/10000,sum(rankA[,5] == 1)/10000)
+
+Afinal <- data.frame("Ireland" = a1, "Scotland" = a2, "Japan" = a3, "Russia" = a4, "Samoa" = a5)
+Afinal
+
+```
+
+
+
+
+
+
+```{r}
+#INITIALIZE GROUPB 10000
+
+returns = rnorm(1:1000, mean = 0, sd = 1)
+
+X = matrix(ncol = 10,nrow = 10000)
+for (match in 1:10) {
+  for (i in 1:10000) {
+    X[i,match] = sample(returns,1)
+  }
+}
+
+I = matrix(ncol = 10,nrow = 1)
+I[1,1] = as.numeric(Bprob[1,3])
+I[1,2] = as.numeric(Bprob[1,4]) 
+I[1,3] = as.numeric(Bprob[1,5])
+I[1,4] = as.numeric(Bprob[1,6]) 
+I[1,5] = as.numeric(Bprob[2,4]) 
+I[1,6] = as.numeric(Bprob[2,5]) 
+I[1,7] = as.numeric(Bprob[2,6]) 
+I[1,8] = as.numeric(Bprob[3,5]) 
+I[1,9] = as.numeric(Bprob[3,6]) 
+I[1,10] = as.numeric(Bprob[4,6]) 
+
+R = matrix(ncol = 10,nrow = 10000)
+colnames(R) <- c("NZ-SAF","NZ-Ita","NZ-Nam","NZ-Can","SAF-Ita","SAF-Nam","SAF-Can","Ita-Nam","Ita-Can","Nam-Can")
+for (index in 1:10) {
+  for (i in 1:10000) {
+    if (X[i,index] < qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][1]
+    }
+    else if (X[i,index] > qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][2]
+    }
+    else if (X[i,index] == qnorm(I[1,index])) {
+      R[i,index] = "Draw"
+    }
+  }
+}
+
+```
+
+```{r}
+
+# GROUP B VICTORIES
+library(stringr)
+groupB <- matrix(ncol = 5,nrow = 10000)
+colnames(groupB) <- c("NZ", "SAF","Ita","Nam","Can")
+for (i in 1:10000) {
+  groupB[i,1] = sum(str_count(R[i,], "NZ"))
+  groupB[i,2] = sum(str_count(R[i,], "SAF"))
+  groupB[i,3] = sum(str_count(R[i,], "Ita"))
+  groupB[i,4] = sum(str_count(R[i,], "Nam"))
+  groupB[i,5] = sum(str_count(R[i,], "Can"))
+}
+
+```
+
+```{r}
+# AVG VICTORIES
+
+mean(groupB[,1])
+mean(groupB[,2])
+mean(groupB[,3])
+mean(groupB[,4])
+mean(groupB[,5])
+
+```
+
+```{r}
+
+rankB <- matrix(ncol = 5,nrow = 10000)
+
+for (i in 1:10000) {
+  rankB[i,1] = rank(groupB[i,], ties.method= "random")[1]
+  rankB[i,2] = rank(groupB[i,], ties.method= "random")[2]
+  rankB[i,3] = rank(groupB[i,], ties.method= "random")[3]
+  rankB[i,4] = rank(groupB[i,], ties.method= "random")[4]
+  rankB[i,5] = rank(groupB[i,], ties.method= "random")[5]
+}
+
+#NZ
+b1 <- c(sum(rankB[,1] == 5)/10000,sum(rankB[,1] == 4)/10000,sum(rankB[,1] == 3)/10000,sum(rankB[,1] == 2)/10000,sum(rankB[,1] == 1)/10000)
+#SAF
+b2 <- c(sum(rankB[,2] == 5)/10000,sum(rankB[,2] == 4)/10000,sum(rankB[,2] == 3)/10000,sum(rankB[,2] == 2)/10000,sum(rankB[,2] == 1)/10000)
+#Italy
+b3 <- c(sum(rankB[,3] == 5)/10000,sum(rankB[,3] == 4)/10000,sum(rankB[,3] == 3)/10000,sum(rankB[,3] == 2)/10000,sum(rankB[,3] == 1)/10000)
+#Namibia
+b4 <- c(sum(rankB[,4] == 5)/10000,sum(rankB[,4] == 4)/10000,sum(rankB[,4] == 3)/10000,sum(rankB[,4] == 2)/10000,sum(rankB[,4] == 1)/10000)
+#Canada
+b5 <- c(sum(rankB[,5] == 5)/10000,sum(rankB[,5] == 4)/10000,sum(rankB[,5] == 3)/10000,sum(rankB[,5] == 2)/10000,sum(rankB[,5] == 1)/10000)
+
+Bfinal <- data.frame("New Zealand" = b1, "South Africa" = b2, "Italy" = b3, "Namibia" = b4, "Canada" = b5)
+Bfinal
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE GROUPC 10000
+
+returns = rnorm(1:1000, mean = 0, sd = 1)
+
+X = matrix(ncol = 10,nrow = 10000)
+for (match in 1:10) {
+  for (i in 1:10000) {
+    X[i,match] = sample(returns,1)
+  }
+}
+
+I = matrix(ncol = 10,nrow = 1)
+I[1,1] = as.numeric(Cprob[1,3])
+I[1,2] = as.numeric(Cprob[1,4]) 
+I[1,3] = as.numeric(Cprob[1,5])
+I[1,4] = as.numeric(Cprob[1,6]) 
+I[1,5] = as.numeric(Cprob[2,4]) 
+I[1,6] = as.numeric(Cprob[2,5]) 
+I[1,7] = as.numeric(Cprob[2,6]) 
+I[1,8] = as.numeric(Cprob[3,5]) 
+I[1,9] = as.numeric(Cprob[3,6]) 
+I[1,10] = as.numeric(Cprob[4,6]) 
+
+R = matrix(ncol = 10,nrow = 10000)
+colnames(R) <- c("Eng-Fra","Eng-Arg","Eng-USA","Eng-Ton","Fra-Arg","Fra-USA","Fra-Ton","Arg-USA","Arg-Ton","USA-Ton")
+for (index in 1:10) {
+  for (i in 1:10000) {
+    if (X[i,index] < qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][1]
+    }
+    else if (X[i,index] > qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][2]
+    }
+    else if (X[i,index] == qnorm(I[1,index])) {
+      R[i,index] = "Draw"
+    }
+  }
+}
+
+```
+
+```{r}
+
+# GROUP C VICTORIES
+library(stringr)
+groupC <- matrix(ncol = 5,nrow = 10000)
+colnames(groupC) <- c("Eng", "Fra","Arg","USA","Ton")
+for (i in 1:10000) {
+  groupC[i,1] = sum(str_count(R[i,], "Eng"))
+  groupC[i,2] = sum(str_count(R[i,], "Fra"))
+  groupC[i,3] = sum(str_count(R[i,], "Arg"))
+  groupC[i,4] = sum(str_count(R[i,], "USA"))
+  groupC[i,5] = sum(str_count(R[i,], "Ton"))
+}
+
+```
+
+```{r}
+# AVG VICTORIES
+
+mean(groupC[,1])
+mean(groupC[,2])
+mean(groupC[,3])
+mean(groupC[,4])
+mean(groupC[,5])
+
+```
+
+```{r}
+
+rankC <- matrix(ncol = 5,nrow = 10000)
+
+for (i in 1:10000) {
+  rankC[i,1] = rank(groupC[i,], ties.method= "random")[1]
+  rankC[i,2] = rank(groupC[i,], ties.method= "random")[2]
+  rankC[i,3] = rank(groupC[i,], ties.method= "random")[3]
+  rankC[i,4] = rank(groupC[i,], ties.method= "random")[4]
+  rankC[i,5] = rank(groupC[i,], ties.method= "random")[5]
+}
+
+#Eng
+c1 <- c(sum(rankC[,1] == 5)/10000,sum(rankC[,1] == 4)/10000,sum(rankC[,1] == 3)/10000,sum(rankC[,1] == 2)/10000,sum(rankC[,1] == 1)/10000)
+#Fra
+c2 <- c(sum(rankC[,2] == 5)/10000,sum(rankC[,2] == 4)/10000,sum(rankC[,2] == 3)/10000,sum(rankC[,2] == 2)/10000,sum(rankC[,2] == 1)/10000)
+#Arg
+c3 <- c(sum(rankC[,3] == 5)/10000,sum(rankC[,3] == 4)/10000,sum(rankC[,3] == 3)/10000,sum(rankC[,3] == 2)/10000,sum(rankC[,3] == 1)/10000)
+#USA
+c4 <- c(sum(rankC[,4] == 5)/10000,sum(rankC[,4] == 4)/10000,sum(rankC[,4] == 3)/10000,sum(rankC[,4] == 2)/10000,sum(rankC[,4] == 1)/10000)
+#Ton
+c5 <- c(sum(rankC[,5] == 5)/10000,sum(rankC[,5] == 4)/10000,sum(rankC[,5] == 3)/10000,sum(rankC[,5] == 2)/10000,sum(rankC[,5] == 1)/10000)
+
+Cfinal <- data.frame("England" = c1, "France" = c2, "Argentina" = c3, "USA" = c4, "Tonga" = c5)
+Cfinal
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE GROUPD 10000
+
+returns = rnorm(1:1000, mean = 0, sd = 1)
+
+X = matrix(ncol = 10,nrow = 10000)
+for (match in 1:10) {
+  for (i in 1:10000) {
+    X[i,match] = sample(returns,1)
+  }
+}
+
+I = matrix(ncol = 10,nrow = 1)
+I[1,1] = as.numeric(Dprob[1,3])
+I[1,2] = as.numeric(Dprob[1,4]) 
+I[1,3] = as.numeric(Dprob[1,5])
+I[1,4] = as.numeric(Dprob[1,6]) 
+I[1,5] = as.numeric(Dprob[2,4]) 
+I[1,6] = as.numeric(Dprob[2,5]) 
+I[1,7] = as.numeric(Dprob[2,6]) 
+I[1,8] = as.numeric(Dprob[3,5]) 
+I[1,9] = as.numeric(Dprob[3,6]) 
+I[1,10] = as.numeric(Dprob[4,6]) 
+
+R = matrix(ncol = 10,nrow = 10000)
+colnames(R) <- c("Aus-Wal","Aus-Geo","Aus-Fij","Aus-Uru","Wal-Geo","Wal-Fij","Wal-Uru","Geo-Fij","Geo-Uru","Fij-Uru")
+for (index in 1:10) {
+  for (i in 1:10000) {
+    if (X[i,index] < qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][1]
+    }
+    else if (X[i,index] > qnorm(I[1,index])) {
+      R[i,index] = strsplit(colnames(R)[index],"-")[[1]][2]
+    }
+    else if (X[i,index] == qnorm(I[1,index])) {
+      R[i,index] = "Draw"
+    }
+  }
+}
+
+```
+
+```{r}
+
+# GROUP D VICTORIES
+library(stringr)
+groupD <- matrix(ncol = 5,nrow = 10000)
+colnames(groupD) <- c("Aus", "Wal","Geo","Fij","Uru")
+for (i in 1:10000) {
+  groupD[i,1] = sum(str_count(R[i,], "Aus"))
+  groupD[i,2] = sum(str_count(R[i,], "Wal"))
+  groupD[i,3] = sum(str_count(R[i,], "Geo"))
+  groupD[i,4] = sum(str_count(R[i,], "Fij"))
+  groupD[i,5] = sum(str_count(R[i,], "Uru"))
+}
+
+```
+
+```{r}
+# AVG VICTORIES
+
+mean(groupD[,1])
+mean(groupD[,2])
+mean(groupD[,3])
+mean(groupD[,4])
+mean(groupD[,5])
+
+```
+
+```{r}
+
+rankD <- matrix(ncol = 5,nrow = 10000)
+
+for (i in 1:10000) {
+  rankD[i,1] = rank(groupD[i,], ties.method= "random")[1]
+  rankD[i,2] = rank(groupD[i,], ties.method= "random")[2]
+  rankD[i,3] = rank(groupD[i,], ties.method= "random")[3]
+  rankD[i,4] = rank(groupD[i,], ties.method= "random")[4]
+  rankD[i,5] = rank(groupD[i,], ties.method= "random")[5]
+}
+
+#Aus
+d1 <- c(sum(rankD[,1] == 5)/10000,sum(rankD[,1] == 4)/10000,sum(rankD[,1] == 3)/10000,sum(rankD[,1] == 2)/10000,sum(rankD[,1] == 1)/10000)
+#Wal
+d2 <- c(sum(rankD[,2] == 5)/10000,sum(rankD[,2] == 4)/10000,sum(rankD[,2] == 3)/10000,sum(rankD[,2] == 2)/10000,sum(rankD[,2] == 1)/10000)
+#Geo
+d3 <- c(sum(rankD[,3] == 5)/10000,sum(rankD[,3] == 4)/10000,sum(rankD[,3] == 3)/10000,sum(rankD[,3] == 2)/10000,sum(rankD[,3] == 1)/10000)
+#Fij
+d4 <- c(sum(rankD[,4] == 5)/10000,sum(rankD[,4] == 4)/10000,sum(rankD[,4] == 3)/10000,sum(rankD[,4] == 2)/10000,sum(rankD[,4] == 1)/10000)
+#Uru
+d5 <- c(sum(rankD[,5] == 5)/10000,sum(rankD[,5] == 4)/10000,sum(rankD[,5] == 3)/10000,sum(rankD[,5] == 2)/10000,sum(rankD[,5] == 1)/10000)
+
+Dfinal <- data.frame("Australia" = d1, "Wales" = d2, "Georgia" = d3, "Fiji" = d4, "Uruguay" = d5)
+Dfinal
+
+```
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE QF1 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+data1[,6] <- as.numeric(data1[,6])
+DQF1 <- as.matrix(data.frame("A1" = c(data1[15,6],data1[16,6],data1[17,6],data1[18,6],data1[19,6]),"teamA" = c("Ireland","Scotland","Japan","Russia","Samoa"), "B2" = c(data1[20,6],data1[21,6],data1[22,6],data1[23,6],data1[24,6]), "teamB" = c("New Zeland","South Africa","Italy","Namibia","Canada")))
+DQF1
+```
+
+```{r}
+A1 = 10000*as.numeric(DQF1[,1])
+B2 = 10000*as.numeric(DQF1[,3])
+A1new <- sample(rep(c("Ireland","Scotland","Japan","Russia","Samoa"), c(A1[1],A1[2],A1[3],A1[4],A1[5])))
+B2new <- sample(rep(c("New Zealand","South Africa","Italy","Namibia","Canada"), c(B2[1],B2[2],B2[3],B2[4],B2[5])))
+```
+
+```{r}
+Q1DF <- data.frame(A1new)
+index <- c("Ireland","Scotland","Japan","Russia","Samoa")
+values <- c(data[1,6],data[2,6],data[3,6],data[4,6],data[5,6])
+Q1DF$ELOA <- values[match(Q1DF$A1new, index)]
+Q1DF <- head(Q1DF,-37)
+Q1DF$B2new <- B2new
+index <- c("New Zealand","South Africa","Italy","Namibia","Canada")
+values <- c(data[8,6],data[9,6],data[10,6],data[11,6],data[12,6])
+Q1DF$ELOB <- values[match(Q1DF$B2new, index)]
+for (i in 1:nrow(Q1DF)) {
+  if (Q1DF$ELOA[i] > Q1DF$ELOB[i]) {
+    Q1DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q1DF$ELOB[i] - Q1DF$ELOA[i]) / 400))
+    Q1DF$name[i] <- as.character(paste(Q1DF$A1new[i],Q1DF$B2new[i],sep="-"))
+  }
+  else if  (Q1DF$ELOA[i] < Q1DF$ELOB[i]) {
+    Q1DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q1DF$ELOA[i] - Q1DF$ELOB[i]) / 400))
+    Q1DF$name[i] <- as.character(paste(Q1DF$B2new[i],Q1DF$A1new[i],sep="-"))
+  }
+}
+
+head(Q1DF)
+Q1 <- Q1DF[!duplicated(Q1DF),]
+Q1
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(Q1DF))
+for (i in 1:nrow(Q1DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(Q1DF),nrow = 1)
+I[1,] <- Q1DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(Q1DF))
+
+for (i in 1:nrow(Q1DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q1DF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q1DF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# Q1 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(Q1DF)
+total
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE QF2 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+DQF2 <- as.matrix(data.frame("D1" = c(data1[15,11],data1[16,11],data1[17,11],data1[18,11],data1[19,11]),"teamD" = c("Australia","Wales","Georgia","Fiji","Uruguay"), "C2" = c(data1[20,11],data1[21,11],data1[22,11],data1[23,11],data1[24,11]), "teamC" = c("England","France","Argentina","USA","Tonga")))
+DQF2
+```
+
+```{r}
+D1 = 10000*as.numeric(DQF2[,1])
+C2 = 10000*as.numeric(DQF2[,3])
+D1new <- sample(rep(c("Australia","Wales","Georgia","Fiji","Uruguay"), c(D1[1],D1[2],D1[3],D1[4],D1[5])))
+C2new <- sample(rep(c("England","France","Argentina","USA","Tonga"), c(C2[1],C2[2],C2[3],C2[4],C2[5])))
+```
+
+```{r}
+
+Q2DF <- data.frame(D1new)
+index <- c("Australia","Wales","Georgia","Fiji","Uruguay")
+values <- c(data[22,6],data[23,6],data[24,6],data[25,6],data[26,6])
+Q2DF$ELOD <- values[match(Q2DF$D1new, index)]
+C2new <- head(C2new,-39)
+Q2DF$C2new <- C2new
+index <- c("England","France","Argentina","USA","Tonga")
+values <- c(data[15,6],data[16,6],data[17,6],data[18,6],data[19,6])
+Q2DF$ELOC <- values[match(Q2DF$C2new, index)]
+for (i in 1:nrow(Q2DF)) {
+  if (Q2DF$ELOD[i] > Q2DF$ELOC[i]) {
+    Q2DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q2DF$ELOC[i] - Q2DF$ELOD[i]) / 400))
+    Q2DF$name[i] <- paste(Q2DF$D1new[i],Q2DF$C2new[i],sep="-")
+  }
+  else if (Q2DF$ELOC[i] > Q2DF$ELOD[i]) {
+    Q2DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q2DF$ELOD[i] - Q2DF$ELOC[i]) / 400))
+    Q2DF$name[i] <- paste(Q2DF$C2new[i],Q2DF$D1new[i],sep="-")
+  }
+}
+
+head(Q2DF)
+Q2 <- Q2DF[!duplicated(Q2DF),]
+Q2
+```
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(Q2DF))
+for (i in 1:nrow(Q2DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(Q2DF),nrow = 1)
+I[1,] <- Q2DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(Q2DF))
+
+for (i in 1:nrow(Q2DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q2DF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q2DF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# Q2 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(Q2DF)
+total
+
+```
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE QF3 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+DQF3 <- as.matrix(data.frame("B1" = c(data1[15,16],data1[16,16],data1[17,16],data1[18,16],data1[19,16]),"teamB" = c("New Zealand","South Africa","Italy","Namibia","Canada"), "A2" = c(data1[20,16],data1[21,16],data1[22,16],data1[23,16],data1[24,16]), "teamA" = c("Ireland","Scotland","Japan","Russia","Samoa")))
+DQF3
+```
+
+
+
+
+```{r}
+B1 = 10000*as.numeric(DQF3[,1])
+A2 = 10000*as.numeric(DQF3[,3])
+B1new <- sample(rep(c("New Zealand","South Africa","Italy","Namibia","Canada"), c(B1[1],B1[2],B1[3],B1[4],B1[5])))
+A2new <- sample(rep(c("Ireland","Scotland","Japan","Russia","Samoa"), c(A2[1],A2[2],A2[3],A2[4],A2[5])))
+```
+
+
+
+
+```{r}
+
+Q3DF <- data.frame(B1new)
+index <- c("New Zealand","South Africa","Italy","Namibia","Canada")
+values <- c(data[8,6],data[9,6],data[10,6],data[11,6],data[12,6])
+Q3DF$ELOB <- values[match(Q3DF$B1new, index)]
+Q3DF <- head(Q3DF,-6)
+Q3DF$A2new <- A2new
+index <- c("Ireland","Scotland","Japan","Russia","Samoa")
+values <- c(data[1,6],data[2,6],data[3,6],data[4,6],data[5,6])
+Q3DF$ELOA <- values[match(Q3DF$A2new, index)]
+for (i in 1:nrow(Q3DF)) {
+  if (Q3DF$ELOB[i] > Q3DF$ELOA[i]) {
+    Q3DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q3DF$ELOA[i] - Q3DF$ELOB[i]) / 400))
+    Q3DF$name[i] <- paste(Q3DF$B1new[i],Q3DF$A2new[i],sep="-")
+  }
+  else if (Q3DF$ELOB[i] < Q3DF$ELOA[i]) {
+    Q3DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q3DF$ELOB[i] - Q3DF$ELOA[i]) / 400))
+    Q3DF$name[i] <- paste(Q3DF$A2new[i],Q3DF$B1new[i],sep="-")
+  }
+}
+
+head(Q3DF)
+Q3 <- Q3DF[!duplicated(Q3DF),]
+Q3
+```
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(Q3DF))
+for (i in 1:nrow(Q3DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(Q3DF),nrow = 1)
+I[1,] <- Q3DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(Q3DF))
+
+for (i in 1:nrow(Q3DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q3DF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q3DF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# Q3 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(Q3DF)
+total
+
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE QF4 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+DQF4 <- as.matrix(data.frame("C1" = c(data1[15,21],data1[16,21],data1[17,21],data1[18,21],data1[19,21]),"teamC" = c("England","France","Argentina","USA","Tonga"), "D2" = c(data1[20,21],data1[21,21],data1[22,21],data1[23,21],data1[24,21]), "teamD" = c("Australia","Wales","Georgia","Fiji","Uruguay")))
+DQF4
+```
+
+
+
+
+```{r}
+C1 = 10000*as.numeric(DQF4[,1])
+D2 = 10000*as.numeric(DQF4[,3])
+C1new <- sample(rep(c("England","France","Argentina","USA","Tonga"), c(C1[1],C1[2],C1[3],C1[4],C1[5])))
+D2new <- sample(rep(c("Australia","Wales","Georgia","Fiji","Uruguay"), c(D2[1],D2[2],D2[3],D2[4],D2[5])))
+```
+
+```{r}
+
+Q4DF <- data.frame(C1new)
+index <- c("England","France","Argentina","USA","Tonga")
+values <- c(data[15,6],data[16,6],data[17,6],data[18,6],data[19,6])
+Q4DF$ELOC <- values[match(Q4DF$C1new, index)]
+D2new <- head(D2new,-36)
+Q4DF$D2new <- D2new
+index <- c("Australia","Wales","Georgia","Fiji","Uruguay")
+values <- c(data[22,6],data[23,6],data[24,6],data[25,6],data[26,6])
+Q4DF$ELOD <- values[match(Q4DF$D2new, index)]
+for (i in 1:nrow(Q4DF)) {
+  if (Q4DF$ELOC[i] > Q4DF$ELOD[i]) {
+    Q4DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q4DF$ELOD[i] - Q4DF$ELOC[i]) / 400))
+    Q4DF$name[i] <- paste(Q4DF$C1new[i],Q4DF$D2new[i],sep="-")
+  }
+  else if (Q4DF$ELOC[i] < Q4DF$ELOD[i]) {
+    Q4DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((Q4DF$ELOC[i] - Q4DF$ELOD[i]) / 400))
+    Q4DF$name[i] <- paste(Q4DF$D2new[i],Q4DF$C1new[i],sep="-")
+  }
+}
+
+head(Q4DF)
+Q4 <- Q4DF[!duplicated(Q4DF),]
+Q4
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(Q4DF))
+for (i in 1:nrow(Q4DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(Q4DF),nrow = 1)
+I[1,] <- Q4DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(Q4DF))
+
+for (i in 1:nrow(Q4DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q4DF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(Q4DF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# Q4 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(Q4DF)
+total
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE SF1 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+DSF1 <- as.matrix(data.frame("Q1" = c(data1[15,7],data1[16,7],data1[17,7],data1[18,7],data1[19,7],data1[20,7],data1[21,7],data1[22,7],data1[23,7],data1[24,7]),"teamQ1" = c("Ireland","Scotland","Japan","Russia","Samoa","New Zeland","South Africa","Italy","Namibia","Canada"), "Q2" = c(data1[15,12],data1[16,12],data1[17,12],data1[18,12],data1[19,12],data1[20,12],data1[21,12],data1[22,12],data1[23,12],data1[24,12]), "teamQ2" = c("Australia","Wales","Georgia","Fiji","Uruguay","England","France","Argentina","USA","Tonga")))
+DSF1
+```
+
+```{r}
+Q1 = 10000*as.numeric(DSF1[,1])
+Q2 = 10000*as.numeric(DSF1[,3])
+Q1new <- sample(rep(c("Ireland","Scotland","Japan","Russia","Samoa","New Zealand","South Africa","Italy","Namibia","Canada"), c(Q1[1],Q1[2],Q1[3],Q1[4],Q1[5],Q1[6],Q1[7],Q1[8],Q1[9],Q1[10])))
+Q2new <- sample(rep(c("Australia","Wales","Georgia","Fiji","Uruguay","England","France","Argentina","USA","Tonga"), c(Q2[1],Q2[2],Q2[3],Q2[4],Q2[5],Q2[6],Q2[7],Q2[8],Q2[9],Q2[10])))
+```
+
+
+
+```{r}
+SF1DF <- data.frame(Q1new)
+index <- c("Ireland","Scotland","Japan","Russia","Samoa","New Zealand","South Africa","Italy","Namibia","Canada")
+values <- c(data[1,6],data[2,6],data[3,6],data[4,6],data[5,6],data[8,6],data[9,6],data[10,6],data[11,6],data[12,6])
+SF1DF$ELOQ1 <- values[match(SF1DF$Q1new, index)]
+SF1DF <- head(SF1DF,-3)
+SF1DF$Q2new <- Q2new
+index <- c("Australia","Wales","Georgia","Fiji","Uruguay","England","France","Argentina","USA","Tonga")
+values <- c(data[22,6],data[23,6],data[24,6],data[25,6],data[26,6],data[15,6],data[16,6],data[17,6],data[18,6],data[19,6])
+
+
+
+SF1DF$ELOQ2 <- values[match(SF1DF$Q2new, index)]
+for (i in 1:nrow(SF1DF)) {
+  if (SF1DF$ELOQ1[i] > SF1DF$ELOQ2[i]) {
+    SF1DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((SF1DF$ELOQ2[i] - SF1DF$ELOQ1[i]) / 400))
+    SF1DF$name[i] <- as.character(paste(SF1DF$Q1new[i],SF1DF$Q2new[i],sep="-"))
+  }
+  else if  (SF1DF$ELOQ1[i] < SF1DF$ELOQ2[i]) {
+    SF1DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((SF1DF$ELOQ1[i] - SF1DF$ELOQ2[i]) / 400))
+    SF1DF$name[i] <- as.character(paste(SF1DF$Q2new[i],SF1DF$Q1new[i],sep="-"))
+  }
+}
+
+head(SF1DF)
+SF1 <- SF1DF[!duplicated(SF1DF),]
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(SF1DF))
+for (i in 1:nrow(SF1DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(SF1DF),nrow = 1)
+I[1,] <- SF1DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 2,nrow = nrow(SF1DF))
+
+for (i in 1:nrow(SF1DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(SF1DF$name[i],"-")[[1]][1]
+    R[i,2] = strsplit(SF1DF$name[i],"-")[[1]][2]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(SF1DF$name[i],"-")[[1]][2]
+    R[i,2] = strsplit(SF1DF$name[i],"-")[[1]][1]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# SF1 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R[,1]))
+total$Freq <- total$Freq / nrow(SF1DF)
+total
+total <- as.data.frame(table(R[,2]))
+total$Freq <- total$Freq / nrow(SF1DF)
+total
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE SF2 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+DSF2 <- as.matrix(data.frame("Q3" = c(data1[15,17],data1[16,17],data1[17,17],data1[18,17],data1[19,17],data1[20,17],data1[21,17],data1[22,17],data1[23,17],data1[24,17]),"teamQ3" = c("New Zealand","South Africa","Italy","Namibia","Canada","Ireland","Scotland","Japan","Russia","Samoa"), "Q4" = c(data1[15,22],data1[16,22],data1[17,22],data1[18,22],data1[19,22],data1[20,22],data1[21,22],data1[22,22],data1[23,22],data1[24,22]), "teamQ4" = c("England","France","Argentina","USA","Tonga","Australia","Wales","Georgia","Fiji","Uruguay")))
+DSF2
+```
+
+```{r}
+Q3 = 10000*as.numeric(DSF2[,1])
+Q4 = 10000*as.numeric(DSF2[,3])
+Q3new <- sample(rep(c("New Zealand","South Africa","Italy","Namibia","Canada","Ireland","Scotland","Japan","Russia","Samoa"), c(Q3[1],Q3[2],Q3[3],Q3[4],Q3[5],Q3[6],Q3[7],Q3[8],Q3[9],Q3[10])))
+Q4new <- sample(rep(c("England","France","Argentina","USA","Tonga","Australia","Wales","Georgia","Fiji","Uruguay"), c(Q4[1],Q4[2],Q4[3],Q4[4],Q4[5],Q4[6],Q4[7],Q4[8],Q4[9],Q4[10])))
+```
+
+
+
+```{r}
+SF2DF <- data.frame(Q3new)
+index <- c("New Zealand","South Africa","Italy","Namibia","Canada","Ireland","Scotland","Japan","Russia","Samoa")
+values <- c(data[8,6],data[9,6],data[10,6],data[11,6],data[12,6],data[1,6],data[2,6],data[3,6],data[4,6],data[5,6])
+
+SF2DF$ELOQ3 <- values[match(SF2DF$Q3new, index)]
+Q4new <- head(Q4new,-2)
+SF2DF$Q4new <- Q4new
+index <- c("England","France","Argentina","USA","Tonga","Australia","Wales","Georgia","Fiji","Uruguay")
+
+values <- c(data[15,6],data[16,6],data[17,6],data[18,6],data[19,6],data[22,6],data[23,6],data[24,6],data[25,6],data[26,6])
+
+SF2DF$ELOQ4 <- values[match(SF2DF$Q4new, index)]
+for (i in 1:nrow(SF2DF)) {
+  if (SF2DF$ELOQ3[i] > SF2DF$ELOQ4[i]) {
+    SF2DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((SF2DF$ELOQ4[i] - SF2DF$ELOQ3[i]) / 400))
+    SF2DF$name[i] <- as.character(paste(SF2DF$Q3new[i],SF2DF$Q4new[i],sep="-"))
+  }
+  else if  (SF2DF$ELOQ3[i] < SF2DF$ELOQ4[i]) {
+    SF2DF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((SF2DF$ELOQ3[i] - SF2DF$ELOQ4[i]) / 400))
+    SF2DF$name[i] <- as.character(paste(SF2DF$Q4new[i],SF2DF$Q3new[i],sep="-"))
+  }
+}
+
+head(SF2DF)
+SF2 <- SF2DF[!duplicated(SF2DF),]
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(SF2DF))
+for (i in 1:nrow(SF2DF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(SF2DF),nrow = 1)
+I[1,] <- SF2DF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 2,nrow = nrow(SF2DF))
+
+for (i in 1:nrow(SF2DF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(SF2DF$name[i],"-")[[1]][1]
+    R[i,2] = strsplit(SF2DF$name[i],"-")[[1]][2]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(SF2DF$name[i],"-")[[1]][2]
+    R[i,2] = strsplit(SF2DF$name[i],"-")[[1]][1]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# SF2 VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R[,1]))
+total$Freq <- total$Freq / nrow(SF2DF)
+total
+total <- as.data.frame(table(R[,2]))
+total$Freq <- total$Freq / nrow(SF2DF)
+total
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE Fin 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+Fin <- as.matrix(data.frame("SF1" = c(data1[41,19],data1[42,19],data1[43,19],data1[44,19],data1[45,19],data1[46,19],data1[47,19],data1[48,19],data1[49,19],data1[50,19],data1[51,19],data1[52,19],data1[53,19],data1[54,19],data1[55,19],data1[56,19],data1[57,19],data1[58,19],data1[59,19],data1[60,19]),
+                            "teamSF" = c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), 
+                            "SF2" = c(data1[41,20],data1[42,20],data1[43,20],data1[44,20],data1[45,20],data1[46,20],data1[47,20],data1[48,20],data1[49,20],data1[50,20],data1[51,20],data1[52,20],data1[53,20],data1[54,20],data1[55,20],data1[56,20],data1[57,20],data1[58,20],data1[59,20],data1[60,20])))
+Fin
+```
+
+```{r}
+SF1 = 10000*as.numeric(Fin[,1])
+SF2 = 10000*as.numeric(Fin[,3])
+
+SF1new <- sample(rep(c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), c(SF1[1],SF1[2],SF1[3],SF1[4],SF1[5],SF1[6],SF1[7],SF1[8],SF1[9],SF1[10],SF1[11],SF1[12],SF1[13],SF1[14],SF1[15],SF1[16],SF1[17],SF1[18],SF1[19],SF1[20])))
+
+SF2new <- sample(rep(c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), c(SF2[1],SF2[2],SF2[3],SF2[4],SF2[5],SF2[6],SF2[7],SF2[8],SF2[9],SF2[10],SF2[11],SF2[12],SF2[13],SF2[14],SF2[15],SF2[16],SF2[17],SF2[18],SF2[19],SF2[20])))
+
+FinDF <- data.frame(SF1new)
+index <- c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18])
+values <- c(2511,2184,1922,1743,1727,2573,2211,1720,1673,1617,2134,2354,1877,2018,1738,2335,1974,1900,1980,1860)
+FinDF$ELOSF1 <- values[match(FinDF$SF1new, index)]
+#SF2DF <- head(SF2DF,-3)
+FinDF$SF2new <- SF2new
+index <- c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18])
+values <- c(2511,2184,1922,1743,1727,2573,2211,1720,1673,1617,2134,2354,1877,2018,1738,2335,1974,1900,1980,1860)
+FinDF$ELOSF2 <- values[match(FinDF$SF2new, index)]
+for (i in 1:nrow(FinDF)) {
+  if (FinDF$ELOSF1[i] > FinDF$ELOSF2[i]) {
+    FinDF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((FinDF$ELOSF2[i] - FinDF$ELOSF1[i]) / 400))
+    FinDF$name[i] <- as.character(paste(FinDF$SF1new[i],FinDF$SF2new[i],sep="-"))
+  }
+  else if  (FinDF$ELOSF1[i] < FinDF$ELOSF2[i]) {
+    FinDF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((FinDF$ELOSF1[i] - FinDF$ELOSF2[i]) / 400))
+    FinDF$name[i] <- as.character(paste(FinDF$SF2new[i],FinDF$SF1new[i],sep="-"))
+  }
+}
+
+FinDF <- FinDF[FinDF$SF1new != FinDF$SF2new[i],]
+nrow(FinDF)
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(FinDF))
+for (i in 1:nrow(FinDF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(FinDF),nrow = 1)
+I[1,] <- FinDF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(FinDF))
+
+for (i in 1:nrow(FinDF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(FinDF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(FinDF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# F VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(FinDF)
+total
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#INITIALIZE Fin 10000
+
+data1=read.csv("/Users/marcusthuillier/Desktop/Rugby/Excel/WorldCupPred.csv", header=T, stringsAsFactors = FALSE)
+
+Fin <- as.matrix(data.frame("SF1" = c(data1[41,21],data1[42,21],data1[43,21],data1[44,21],data1[45,21],data1[46,21],data1[47,21],data1[48,21],data1[49,21],data1[50,21],data1[51,21],data1[52,21],data1[53,21],data1[54,21],data1[55,21],data1[56,21],data1[57,21],data1[58,21],data1[59,21],data1[60,21]),
+                            "teamSF" = c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), 
+                            "SF2" = c(data1[41,22],data1[42,22],data1[43,22],data1[44,22],data1[45,22],data1[46,22],data1[47,22],data1[48,22],data1[49,22],data1[50,22],data1[51,22],data1[52,22],data1[53,22],data1[54,22],data1[55,22],data1[56,22],data1[57,22],data1[58,22],data1[59,22],data1[60,22])))
+Fin
+```
+
+```{r}
+SF1 = 10000*as.numeric(Fin[,1])
+SF2 = 10000*as.numeric(Fin[,3])
+
+SF1new <- sample(rep(c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), c(SF1[1],SF1[2],SF1[3],SF1[4],SF1[5],SF1[6],SF1[7],SF1[8],SF1[9],SF1[10],SF1[11],SF1[12],SF1[13],SF1[14],SF1[15],SF1[16],SF1[17],SF1[18],SF1[19],SF1[20])))
+
+SF2new <- sample(rep(c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18]), c(SF2[1],SF2[2],SF2[3],SF2[4],SF2[5],SF2[6],SF2[7],SF2[8],SF2[9],SF2[10],SF2[11],SF2[12],SF2[13],SF2[14],SF2[15],SF2[16],SF2[17],SF2[18],SF2[19],SF2[20])))
+
+FinDF <- data.frame(SF1new)
+index <- c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18])
+values <- c(2511,2184,1922,1743,1727,2573,2211,1720,1673,1617,2134,2354,1877,2018,1738,2335,1974,1900,1980,1860)
+FinDF$ELOSF1 <- values[match(FinDF$SF1new, index)]
+FinDF <- head(FinDF,-1)
+FinDF$SF2new <- SF2new
+index <- c(data1[41,18],data1[42,18],data1[43,18],data1[44,18],data1[45,18],data1[46,18],data1[47,18],data1[48,18],data1[49,18],data1[50,18],data1[51,18],data1[52,18],data1[53,18],data1[54,18],data1[55,18],data1[56,18],data1[57,18],data1[58,18],data1[59,18],data1[60,18])
+values <- c(2511,2184,1922,1743,1727,2573,2211,1720,1673,1617,2134,2354,1877,2018,1738,2335,1974,1900,1980,1860)
+FinDF$ELOSF2 <- values[match(FinDF$SF2new, index)]
+for (i in 1:nrow(FinDF)) {
+  if (FinDF$ELOSF1[i] > FinDF$ELOSF2[i]) {
+    FinDF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((FinDF$ELOSF2[i] - FinDF$ELOSF1[i]) / 400))
+    FinDF$name[i] <- as.character(paste(FinDF$SF1new[i],FinDF$SF2new[i],sep="-"))
+  }
+  else if  (FinDF$ELOSF1[i] < FinDF$ELOSF2[i]) {
+    FinDF$prob[i] = 1 * 1 / (1 + 1 * 10 ^ ((FinDF$ELOSF1[i] - FinDF$ELOSF2[i]) / 400))
+    FinDF$name[i] <- as.character(paste(FinDF$SF2new[i],FinDF$SF1new[i],sep="-"))
+  }
+}
+
+FinDF <- FinDF[FinDF$SF1new != FinDF$SF2new[i],]
+nrow(FinDF)
+```
+
+
+```{r}
+returns = rnorm(1:10000, mean = 0, sd = 1)
+
+X = matrix(ncol = 1,nrow = nrow(FinDF))
+for (i in 1:nrow(FinDF)) {
+    X[i,1] = sample(returns,1)
+}
+head(X)
+I = matrix(ncol = nrow(FinDF),nrow = 1)
+I[1,] <- FinDF$prob
+
+```
+
+
+```{r}
+R = matrix(ncol = 1,nrow = nrow(FinDF))
+
+for (i in 1:nrow(FinDF)) {
+  if (X[i,1] <= qnorm(I[1,i])) {
+    R[i,1] = strsplit(FinDF$name[i],"-")[[1]][1]
+  }
+  else if (X[i,1] > qnorm(I[1,i])) {
+    R[i,1] = strsplit(FinDF$name[i],"-")[[1]][2]
+  }
+}
+head(R)
+```
+
+```{r}
+
+# 3rd VICTORIES
+library(stringr)
+
+total <- as.data.frame(table(R))
+total$Freq <- total$Freq / nrow(FinDF)
+total
+```
+
+
+
+
+
